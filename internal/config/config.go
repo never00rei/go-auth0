@@ -10,6 +10,7 @@ import (
 const (
 	ConfigFile   = "credentials"
 	ConfigFolder = ".auth0"
+	AppName      = "auth0-cli"
 )
 
 var HomeDir = os.Getenv("HOME")
