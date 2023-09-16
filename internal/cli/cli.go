@@ -1,21 +1,24 @@
-package main
+package cli
 
 import (
-	"fmt"
 	"log"
 	"os"
 
+	"github.com/never00rei/go-auth0/internal/cli/command"
 	"github.com/never00rei/go-auth0/internal/config"
 	"github.com/urfave/cli/v2"
 )
 
-func main() {
+func Execute() {
 	app := &cli.App{
 		Name:  config.AppName,
 		Usage: "A CLI tool for Auth0",
-		Action: func(*cli.Context) error {
-			fmt.Println("Hello world!")
-			return nil
+		Commands: []*cli.Command{
+			{
+				Name:   "configure",
+				Usage:  "Configure the CLI tool",
+				Action: command.Configure,
+			},
 		},
 	}
 

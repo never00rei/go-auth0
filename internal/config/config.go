@@ -30,6 +30,12 @@ func CheckFileExists(filePath string) bool {
 	return true
 }
 
+func CreateConfigFolder() {
+	if !CheckFileExists(fmt.Sprintf("%s/%s", HomeDir, ConfigFolder)) {
+		os.MkdirAll(fmt.Sprintf("%s/%s", HomeDir, ConfigFolder), 0700)
+	}
+}
+
 func ReadCredentialsFile(filePath string, tenant string) (*ini.File, error) {
 	cfg, err := ini.Load(filePath)
 	if err != nil {
@@ -70,6 +76,7 @@ func SaveCredentialsFile(config ClientAuth) error {
 	var err error
 
 	if !CheckFileExists(ConfigPath) {
+		CreateConfigFolder()
 		credentials = ini.Empty()
 	} else {
 		credentials, err = ReadCredentialsFile(ConfigPath, config.Tenant)
@@ -78,6 +85,7 @@ func SaveCredentialsFile(config ClientAuth) error {
 		}
 	}
 
+	// New section updates an existing section if found.
 	section, err := credentials.NewSection(config.Tenant)
 	if err != nil {
 		return fmt.Errorf("failed to create new section: %v", err)
