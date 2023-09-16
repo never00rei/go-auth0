@@ -85,7 +85,7 @@ func SaveCredentialsFile(config ClientAuth) error {
 		}
 	}
 
-	// New section updates an existing section if found.
+	// New section also updates an existing section if found.
 	section, err := credentials.NewSection(config.Tenant)
 	if err != nil {
 		return fmt.Errorf("failed to create new section: %v", err)
