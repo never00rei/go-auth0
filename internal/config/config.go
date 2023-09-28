@@ -22,8 +22,18 @@ type ClientAuth struct {
 	Tenant       string
 }
 
-func CheckFileExists(filePath string) bool {
-	if _, err := os.Stat(filePath); os.IsNotExist(err) {
+type FileSystem interface {
+	Stat(name string) (os.FileInfo, error)
+}
+
+type OSFileSystem struct{}
+
+func (OSFileSystem) Stat(name string) (os.FileInfo, error) {
+	return os.Stat(name)
+}
+
+func CheckFileExists(fs FileSystem, filePath string) bool {
+	if _, err := fs.Stat(filePath); os.IsNotExist(err) {
 		return false
 	}
 
@@ -31,9 +41,7 @@ func CheckFileExists(filePath string) bool {
 }
 
 func CreateConfigFolder() {
-	if !CheckFileExists(fmt.Sprintf("%s/%s", HomeDir, ConfigFolder)) {
-		os.MkdirAll(fmt.Sprintf("%s/%s", HomeDir, ConfigFolder), 0700)
-	}
+	os.MkdirAll(fmt.Sprintf("%s/%s", HomeDir, ConfigFolder), 0700)
 }
 
 func ReadCredentialsFile(filePath string, tenant string) (*ini.File, error) {
@@ -46,7 +54,10 @@ func ReadCredentialsFile(filePath string, tenant string) (*ini.File, error) {
 }
 
 func GetCredentials(tenant string) (*ClientAuth, error) {
-	if !CheckFileExists(ConfigPath) {
+
+	fs := OSFileSystem{}
+
+	if !CheckFileExists(fs, ConfigPath) {
 		return nil, fmt.Errorf("credentials file not found")
 	}
 
@@ -75,7 +86,9 @@ func SaveCredentialsFile(config ClientAuth) error {
 	var credentials *ini.File
 	var err error
 
-	if !CheckFileExists(ConfigPath) {
+	fs := OSFileSystem{}
+
+	if !CheckFileExists(fs, ConfigPath) {
 		CreateConfigFolder()
 		credentials = ini.Empty()
 	} else {

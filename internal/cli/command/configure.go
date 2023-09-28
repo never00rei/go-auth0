@@ -58,7 +58,7 @@ func clientSecretValidator(input string) error {
 	}
 
 	if len(input) < 12 {
-		return fmt.Errorf("input is too short")
+		return fmt.Errorf("input is too short, must be at least 12 characters long")
 	}
 
 	if !regexp.MustCompile(`[A-Z]`).MatchString(input) {
