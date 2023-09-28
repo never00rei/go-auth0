@@ -113,10 +113,20 @@ func Configure(c *cli.Context) error {
 		return fmt.Errorf("failed to get client secret: %v", err)
 	}
 
+	clientApiServerPrompt := promptui.Prompt{
+		Label: "Auth0 API Server",
+	}
+
+	clientApiServer, err := clientApiServerPrompt.Run()
+	if err != nil {
+		return fmt.Errorf("failed to get API server: %v", err)
+	}
+
 	cfg := &config.ClientAuth{
 		ClientID:     clientID,
 		ClientSecret: clientSecret,
 		Tenant:       tenant,
+		ApiServer:    clientApiServer,
 	}
 
 	if err := config.SaveCredentialsFile(*cfg); err != nil {
