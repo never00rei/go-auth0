@@ -20,7 +20,7 @@ type ClientAuth struct {
 	ClientID     string
 	ClientSecret string
 	Tenant       string
-	ApiServer    string
+	ApiDomain    string
 }
 
 type FileSystem interface {
@@ -77,7 +77,7 @@ func GetCredentials(tenant string) (*ClientAuth, error) {
 		ClientID:     section.Key("ClientID").String(),
 		ClientSecret: section.Key("ClientSecret").String(),
 		Tenant:       section.Name(),
-		ApiServer:    section.Key("ApiServer").String(),
+		ApiDomain:    section.Key("ApiDomain").String(),
 	}
 
 	return config, nil
@@ -114,8 +114,8 @@ func SaveCredentialsFile(config ClientAuth) error {
 		return fmt.Errorf("failed to create new key: %v", err)
 	}
 
-	if _, err = section.NewKey("ApiServer", config.ApiServer); err != nil {
-		return fmt.Errorf("failed to create new key: %v", err)
+	if _, err = section.NewKey("ApiDomain", config.ApiDomain); err != nil {
+		return fmt.Errorf("failed to create new : %v", err)
 	}
 
 	if err = credentials.SaveTo(ConfigPath); err != nil {
