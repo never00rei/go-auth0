@@ -19,7 +19,6 @@ type BearerToken struct {
 type Auth0AuthToken struct {
 	ClientAuth  config.ClientAuth
 	Token       string
-	Type        string
 	CreatedDate time.Time
 	ExpiresDate time.Time
 }
@@ -36,6 +35,8 @@ func (a Auth0AuthToken) GetOauthToken(c config.ClientAuth) (string, error) {
 		),
 	)
 
+	log.Printf("fetching token from: %s", tokenUrl)
+
 	req, err := http.NewRequest("POST", tokenUrl, tokenPayload)
 	if err != nil {
 		return "", fmt.Errorf("failed to create request: %v", err)
@@ -47,6 +48,7 @@ func (a Auth0AuthToken) GetOauthToken(c config.ClientAuth) (string, error) {
 	if err != nil {
 		return "", fmt.Errorf("failed to send request: %v", err)
 	}
+
 	defer res.Body.Close()
 
 	if res.StatusCode != 200 {
@@ -60,10 +62,8 @@ func (a Auth0AuthToken) GetOauthToken(c config.ClientAuth) (string, error) {
 	}
 
 	a.CreatedDate = time.Now()
-	a.ExpiresDate = a.CreatedDate.Add(time.Second * 86400)
+	a.ExpiresDate = a.CreatedDate.Add(time.Second * 36000)
 	a.Token = fmt.Sprintf("%s %s", bearerToken.TokenType, bearerToken.OauthToken)
-
-	log.Println(a.Token)
 
 	return a.Token, nil
 }
@@ -78,4 +78,8 @@ func (a Auth0AuthToken) RefreshAuthToken(c config.ClientAuth) (string, error) {
 	}
 
 	return a.Token, nil
+}
+
+func base64Encode(str string) string {
+	return ""
 }
