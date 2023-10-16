@@ -28,7 +28,7 @@ func Execute() {
 						Aliases:  []string{"t"},
 						Usage:    "Auth0 tenant",
 						Required: true,
-						EnvVars:  []string{"AUTH0_TENANT"},
+						EnvVars:  []string{config.EnvSessionTenant},
 					},
 				},
 				Action: command.Login,

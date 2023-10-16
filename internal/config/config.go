@@ -11,6 +11,9 @@ const (
 	ConfigFile   = "credentials"
 	ConfigFolder = ".auth0"
 	AppName      = "auth0-cli"
+	EnvSessionBearerToken string = "AUTH0_SESSION_TOKEN"
+	EnvSessionTokenExpiryTime string = "AUTH0_SESSION_EXPIRY"
+	EnvSessionTenant string = "AUTH0_TENANT"
 )
 
 var HomeDir = os.Getenv("HOME")

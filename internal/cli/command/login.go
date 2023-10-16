@@ -2,9 +2,9 @@ package command
 
 import (
 	"fmt"
-	"log"
 
 	"github.com/never00rei/go-auth0/internal/auth"
+	"github.com/never00rei/go-auth0/internal/cli/shell"
 	"github.com/never00rei/go-auth0/internal/config"
 	"github.com/urfave/cli/v2"
 )
@@ -21,14 +21,16 @@ func Login(c *cli.Context) error {
 		return fmt.Errorf("client credentials not found")
 	}
 
-	var auth0Token auth.Auth0AuthToken
-
-	token, err := auth0Token.GetOauthToken(*clientCreds)
+	authtoken, err := auth.GetOauthToken(*clientCreds)
 	if err != nil {
 		return fmt.Errorf("failed to get token: %v", err)
 	}
 
-	log.Println(token)
+	var sh shell.ShellEnvironment
 
+	sherr := sh.NewSubShell(*authtoken)
+	if sherr != nil {
+		return fmt.Errorf("Failed to create shell: %v", sherr)
+	}
 	return nil
 }
