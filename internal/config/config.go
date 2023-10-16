@@ -11,6 +11,9 @@ const (
 	ConfigFile   = "credentials"
 	ConfigFolder = ".auth0"
 	AppName      = "auth0-cli"
+	EnvSessionBearerToken string = "AUTH0_SESSION_TOKEN"
+	EnvSessionTokenExpiryTime string = "AUTH0_SESSION_EXPIRY"
+	EnvSessionTenant string = "AUTH0_TENANT"
 )
 
 var HomeDir = os.Getenv("HOME")
@@ -20,6 +23,7 @@ type ClientAuth struct {
 	ClientID     string
 	ClientSecret string
 	Tenant       string
+	ApiDomain    string
 }
 
 type FileSystem interface {
@@ -75,7 +79,8 @@ func GetCredentials(tenant string) (*ClientAuth, error) {
 	config := &ClientAuth{
 		ClientID:     section.Key("ClientID").String(),
 		ClientSecret: section.Key("ClientSecret").String(),
-		Tenant:       tenant,
+		Tenant:       section.Name(),
+		ApiDomain:    section.Key("ApiDomain").String(),
 	}
 
 	return config, nil
@@ -110,6 +115,10 @@ func SaveCredentialsFile(config ClientAuth) error {
 
 	if _, err = section.NewKey("ClientSecret", config.ClientSecret); err != nil {
 		return fmt.Errorf("failed to create new key: %v", err)
+	}
+
+	if _, err = section.NewKey("ApiDomain", config.ApiDomain); err != nil {
+		return fmt.Errorf("failed to create new : %v", err)
 	}
 
 	if err = credentials.SaveTo(ConfigPath); err != nil {

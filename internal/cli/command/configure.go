@@ -73,10 +73,6 @@ func clientSecretValidator(input string) error {
 		return fmt.Errorf("input should contain at least one number")
 	}
 
-	if !regexp.MustCompile(`[!@#$%^&*()]`).MatchString(input) { // Add more symbols as needed
-		return fmt.Errorf("input should contain at least one special character")
-	}
-
 	return nil
 }
 
@@ -113,10 +109,20 @@ func Configure(c *cli.Context) error {
 		return fmt.Errorf("failed to get client secret: %v", err)
 	}
 
+	clientApiDomainPrompt := promptui.Prompt{
+		Label: "Auth0 API Domain",
+	}
+
+	clientApiDomain, err := clientApiDomainPrompt.Run()
+	if err != nil {
+		return fmt.Errorf("failed to get API Domain: %v", err)
+	}
+
 	cfg := &config.ClientAuth{
 		ClientID:     clientID,
 		ClientSecret: clientSecret,
 		Tenant:       tenant,
+		ApiDomain:    clientApiDomain,
 	}
 
 	if err := config.SaveCredentialsFile(*cfg); err != nil {

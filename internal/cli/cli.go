@@ -19,6 +19,20 @@ func Execute() {
 				Usage:  "Configure the CLI tool",
 				Action: command.Configure,
 			},
+			{
+				Name:  "login",
+				Usage: "Login to Auth0",
+				Flags: []cli.Flag{
+					&cli.StringFlag{
+						Name:     "tenant",
+						Aliases:  []string{"t"},
+						Usage:    "Auth0 tenant",
+						Required: true,
+						EnvVars:  []string{config.EnvSessionTenant},
+					},
+				},
+				Action: command.Login,
+			},
 		},
 	}
 
