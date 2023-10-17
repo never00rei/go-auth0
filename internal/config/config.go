@@ -8,12 +8,13 @@ import (
 )
 
 const (
-	ConfigFile   = "credentials"
-	ConfigFolder = ".auth0"
-	AppName      = "auth0-cli"
-	EnvSessionBearerToken string = "AUTH0_SESSION_TOKEN"
+	ConfigFile                string = "credentials"
+	ConfigFolder              string = ".auth0"
+	AppName                   string = "auth0-cli"
+	EnvSessionBearerToken     string = "AUTH0_SESSION_TOKEN"
 	EnvSessionTokenExpiryTime string = "AUTH0_SESSION_EXPIRY"
-	EnvSessionTenant string = "AUTH0_TENANT"
+	EnvSessionTenant          string = "AUTH0_TENANT"
+	Auth0ApiVersion           string = "v2"
 )
 
 var HomeDir = os.Getenv("HOME")
@@ -126,4 +127,12 @@ func SaveCredentialsFile(config ClientAuth) error {
 	}
 
 	return nil
+}
+
+func Auth0ApiOauthUrl(domain string) string {
+	return fmt.Sprintf("https://%s/oauth/token", domain)
+}
+
+func Auth0ApiBaseUrl(domain string) string {
+	return fmt.Sprintf("https://%s/api/%s/", domain, Auth0ApiVersion)
 }

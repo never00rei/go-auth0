@@ -6,7 +6,6 @@ import (
 	"os"
 	"os/exec"
 
-	//"github.com/never00rei/go-auth0/internal/auth"
 	"github.com/never00rei/go-auth0/internal/auth"
 	"github.com/never00rei/go-auth0/internal/config"
 )
@@ -16,12 +15,6 @@ type ShellEnvironment struct{}
 func (s ShellEnvironment) GetDefaultShell() string {
 	shell := os.Getenv("SHELL")
 	return shell
-}
-
-// Not implemented yet...:
-func (s ShellEnvironment) GetEnvironmentVars() error {
-
-	return nil
 }
 
 func (s ShellEnvironment) NewSubShell(a auth.Auth0AuthToken) error {
@@ -57,4 +50,9 @@ func (s ShellEnvironment) NewSubShell(a auth.Auth0AuthToken) error {
 
 	return nil
 
+}
+
+func CheckEnvVarExists(envVar string) bool {
+	_, exists := os.LookupEnv(envVar)
+	return exists
 }

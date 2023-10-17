@@ -22,17 +22,23 @@ type Auth0AuthToken struct {
 	ExpiresDate time.Time
 }
 
-func GetOauthToken(c config.ClientAuth) (*Auth0AuthToken, error) {
-	tokenUrl := fmt.Sprintf("https://%s/oauth/token", c.ApiDomain)
-
-	tokenPayload := strings.NewReader(
+func GenerateTokenPayload(c config.ClientAuth, apiBaseUrl string) *strings.Reader {
+	payload := strings.NewReader(
 		fmt.Sprintf(
-			`{"client_id":"%s","client_secret":"%s","audience":"https://%s/api/v2/","grant_type":"client_credentials"}`,
+			`{"client_id":"%s","client_secret":"%s","audience":"%s","grant_type":"client_credentials"}`,
 			c.ClientID,
 			c.ClientSecret,
-			c.ApiDomain,
+			apiBaseUrl,
 		),
 	)
+	return payload
+}
+
+func GetOauthToken(c config.ClientAuth) (*Auth0AuthToken, error) {
+	tokenUrl := config.Auth0ApiOauthUrl(c.ApiDomain)
+	apiBaseUrl := config.Auth0ApiBaseUrl(c.ApiDomain)
+
+	tokenPayload := GenerateTokenPayload(c, apiBaseUrl)
 
 	req, err := http.NewRequest("POST", tokenUrl, tokenPayload)
 	if err != nil {
