@@ -30,13 +30,15 @@ func (s ShellEnvironment) NewSubShell(a auth.Auth0AuthToken) error {
 
 	env := os.Environ()
 
-	tokenEnvVar := fmt.Sprintf("%s=%s", config.EnvSessionBearerToken, a.Token.OauthToken)
+	tokenEnvVar := fmt.Sprintf("%s=%s", config.EnvSessionBearerToken, a.Token.ConstructBearerToken())
 	expiryEnvVar := fmt.Sprintf("%s=%s", config.EnvSessionTokenExpiryTime, a.ExpiresDate.String())
 	tenantEnvVar := fmt.Sprintf("%s=%s", config.EnvSessionTenant, a.ClientAuth.Tenant)
+	apiUrlEnvVar := fmt.Sprintf("%s=%s", config.EnvSessionApiUrl, config.Auth0ApiBaseUrl(a.ClientAuth.ApiDomain))
 
 	env = append(env, tokenEnvVar)
 	env = append(env, expiryEnvVar)
 	env = append(env, tenantEnvVar)
+	env = append(env, apiUrlEnvVar)
 
 	cmd.Env = env
 

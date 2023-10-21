@@ -15,6 +15,10 @@ type BearerToken struct {
 	TokenType  string `json:"token_type"`
 }
 
+func (b BearerToken) ConstructBearerToken() string {
+	return fmt.Sprintf("%s %s", b.TokenType, b.OauthToken)
+}
+
 type Auth0AuthToken struct {
 	ClientAuth  config.ClientAuth
 	Token       BearerToken

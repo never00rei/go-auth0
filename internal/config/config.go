@@ -14,6 +14,7 @@ const (
 	EnvSessionBearerToken     string = "AUTH0_SESSION_TOKEN"
 	EnvSessionTokenExpiryTime string = "AUTH0_SESSION_EXPIRY"
 	EnvSessionTenant          string = "AUTH0_TENANT"
+	EnvSessionApiUrl          string = "AUTH0_SESSION_API_URL"
 	Auth0ApiVersion           string = "v2"
 )
 
