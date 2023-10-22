@@ -3,7 +3,7 @@ package users
 import (
 	"encoding/json"
 	"fmt"
-	//"log"
+	"log"
 	"net/http"
 	"os"
 
@@ -19,10 +19,14 @@ const (
 
 func GetAllUsers(c *cli.Context) error {
 
-	//tenant := os.Getenv(config.EnvSessionTenant)
+	tenant := os.Getenv(config.EnvSessionTenant)
 	apiUrl := os.Getenv(config.EnvSessionApiUrl)
 	sessionToken := os.Getenv(config.EnvSessionBearerToken)
 	apiEndpoint := fmt.Sprintf("%s%s", apiUrl, endpoint)
+
+	if os.Getenv("DEBUG") == "true" {
+		log.Printf("Getting all users for %s tenant via: %s", tenant, apiEndpoint)
+	}
 
 	req, err := http.NewRequest("GET", apiEndpoint, nil)
 	if err != nil {
