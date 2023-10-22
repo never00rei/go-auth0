@@ -1,7 +1,6 @@
 package models
 
 import (
-	"fmt"
 	"time"
 )
 
@@ -32,10 +31,6 @@ type Identity struct {
 	User_Id    string `json:"user_id"`
 	Provider   string `json:"provider"`
 	IsSocial   bool   `json:"isSocial"`
-}
-
-func (i Identity) GetUserId() string {
-	return fmt.Sprintf("%s|%s", i.Provider, i.User_Id)
 }
 
 type UserDetails struct {
