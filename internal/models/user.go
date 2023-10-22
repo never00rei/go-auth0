@@ -28,29 +28,24 @@ import (
 //]
 
 type Identity struct {
-	Connection string
-	User_Id    string
-	Provider   string
-	IsSocial   bool
+	Connection string `json:"connection"`
+	User_Id    string `json:"user_id"`
+	Provider   string `json:"provider"`
+	IsSocial   bool   `json:"isSocial"`
 }
 
 func (i Identity) GetUserId() string {
 	return fmt.Sprintf("%s|%s", i.Provider, i.User_Id)
 }
 
-type User struct {
-	Created_At     time.Time
-	Email          string
-	Email_Verified bool
-	Identities     []Identity
-	Name           string
-	Nickname       string
-	Updated_at     time.Time
-	Picture        string
-	User_Id        string
-}
-
-func (u User) GetConnectionByUser() *string {
-
-	return nil
+type UserDetails struct {
+	Created_At     time.Time  `json:"created_at"`
+	Email          string     `json:"email"`
+	Email_Verified bool       `json:"email_verified"`
+	Identities     []Identity `json:"identities"`
+	Name           string     `json:"name"`
+	Nickname       string     `json:"nickname"`
+	Updated_at     time.Time  `json:"updated_at"`
+	Picture        string     `json:"picture"`
+	User_Id        string     `json:"user_id"`
 }

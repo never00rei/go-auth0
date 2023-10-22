@@ -3,6 +3,7 @@ package auth
 import (
 	"encoding/json"
 	"fmt"
+	//"log"
 	"net/http"
 	"strings"
 	"time"
