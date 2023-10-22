@@ -3,7 +3,9 @@ package auth
 import (
 	"encoding/json"
 	"fmt"
-	//"log"
+	"os"
+
+	"log"
 	"net/http"
 	"strings"
 	"time"
@@ -44,6 +46,10 @@ func GetOauthToken(c config.ClientAuth) (*Auth0AuthToken, error) {
 	apiBaseUrl := config.Auth0ApiBaseUrl(c.ApiDomain)
 
 	tokenPayload := GenerateTokenPayload(c, apiBaseUrl)
+
+	if os.Getenv("DEBUG") == "true" {
+		log.Printf("Fetching Auth0 Management Token from %s", apiBaseUrl)
+	}
 
 	req, err := http.NewRequest("POST", tokenUrl, tokenPayload)
 	if err != nil {
