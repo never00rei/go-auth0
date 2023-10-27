@@ -4,10 +4,11 @@ import (
 	"encoding/json"
 	"fmt"
 	"log"
-	"net/http"
 	"os"
 
 	"github.com/never00rei/go-auth0/internal/config"
+	"github.com/never00rei/go-auth0/internal/handler"
+
 	"github.com/never00rei/go-auth0/internal/models"
 
 	"github.com/urfave/cli/v2"
@@ -28,17 +29,16 @@ func GetAllUsers(c *cli.Context) error {
 		log.Printf("Getting all users for %s tenant via: %s", tenant, apiEndpoint)
 	}
 
-	req, err := http.NewRequest("GET", apiEndpoint, nil)
-	if err != nil {
-		return fmt.Errorf("Failed to create request: %v", err)
+	var headers = [][]string{
+		{"Accept", "application/json"},
+		{"Authorization", sessionToken},
 	}
 
-	req.Header.Add("Accept", "application/json")
-	req.Header.Add("Authorization", sessionToken)
+	httpRequest := handler.NewRestHttpRequest(apiEndpoint)
 
-	res, err := http.DefaultClient.Do(req)
+	res, err := httpRequest.GetRequestHandler(headers)
 	if err != nil {
-		return fmt.Errorf("Failed to send request: %v", err)
+		return err
 	}
 
 	defer res.Body.Close()
@@ -58,7 +58,7 @@ func GetAllUsers(c *cli.Context) error {
 		return fmt.Errorf("Failed to marshal user data: %v", err)
 	}
 
-	// Return the user data back to STDOUT So that it can be used.
+	//Return the user data back to STDOUT So that it can be used.
 	fmt.Println(string(encodedUserData))
 
 	return nil
