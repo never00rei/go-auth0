@@ -1,6 +1,7 @@
 package models
 
 import (
+	"encoding/json"
 	"time"
 )
 
@@ -25,7 +26,7 @@ import (
 //    "user_id": "auth0|652ef7ff158f5fdf275aa15a"
 //  }
 //]
-
+
 type Identity struct {
 	Connection string `json:"connection"`
 	User_Id    string `json:"user_id"`
@@ -43,4 +44,8 @@ type UserDetails struct {
 	Updated_at     time.Time  `json:"updated_at"`
 	Picture        string     `json:"picture"`
 	User_Id        string     `json:"user_id"`
+}
+
+func (u *UserDetails) UnmarshalToModel(data []byte) error {
+	return json.Unmarshal(data, u)
 }
