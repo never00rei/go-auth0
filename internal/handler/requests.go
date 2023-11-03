@@ -11,6 +11,7 @@ type RestHttpRequest struct {
 
 type RestRequestHandler interface {
 	GetRequestHandler()
+	NewRestHttpRequest()
 }
 
 func NewRestHttpRequest(url string) *RestHttpRequest {
