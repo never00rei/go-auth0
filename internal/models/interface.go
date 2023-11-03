@@ -13,5 +13,5 @@ Insert /giphy shrug here... \0/
 */
 
 type Model interface {
-	UnmarshalToModel()
+	UnmarshalToModel(data []byte) error
 }
