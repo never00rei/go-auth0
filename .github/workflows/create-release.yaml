@@ -3,7 +3,7 @@ on:
   push:
     branches:
     - main
-  workflow_dispatch:  
+  workflow_dispatch:
 
 jobs:
   changelog:
@@ -20,17 +20,17 @@ jobs:
       with:
         fetch-depth: 0
 
-    - name: Generate Changelog 
+    - name: Generate Changelog
       id: changelog
       uses: TriPSs/conventional-changelog-action@v3
       with:
         github-token: ${{ secrets.GITHUB_TOKEN }}
-        output-file: "false"       
+        output-file: "false"
         version-file: ".github/deploy/Chart.yaml"
-        version-path: "appVersion" 
-        skip-commit: "true"   
-        skip-tag: "false"   
-        create-summary: "false"     
+        version-path: "appVersion"
+        skip-commit: "true"
+        skip-tag: "false"
+        create-summary: "false"
 
   release:
     needs: [changelog]
