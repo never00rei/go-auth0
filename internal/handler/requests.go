@@ -5,8 +5,13 @@ import (
 	"net/http"
 )
 
+type HttpClient interface {
+	Do(req *http.Request) (*http.Response, error)
+}
+
 type RestHttpRequest struct {
-	url string
+	url    string
+	client HttpClient
 }
 
 type RestRequestHandler interface {
@@ -14,9 +19,15 @@ type RestRequestHandler interface {
 	NewRestHttpRequest()
 }
 
-func NewRestHttpRequest(url string) *RestHttpRequest {
+func NewRestHttpRequest(url string, client HttpClient) *RestHttpRequest {
+
+	if client == nil {
+		client = http.DefaultClient
+	}
+
 	return &RestHttpRequest{
-		url: url,
+		url:    url,
+		client: client,
 	}
 }
 
@@ -31,7 +42,7 @@ func (r RestHttpRequest) GetRequestHandler(headers [][]string) (*http.Response, 
 		req.Header.Add(header[0], header[1])
 	}
 
-	res, err := http.DefaultClient.Do(req)
+	res, err := r.client.Do(req)
 	if err != nil {
 		return nil, fmt.Errorf("failed to send request: %v", err)
 	}

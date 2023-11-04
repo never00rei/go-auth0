@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"log"
+	"net/http"
 	"os"
 
 	"github.com/never00rei/go-auth0/internal/config"
@@ -34,7 +35,9 @@ func GetAllUsers(c *cli.Context) error {
 		{"Authorization", sessionToken},
 	}
 
-	httpRequest := handler.NewRestHttpRequest(apiEndpoint)
+	httpClient := http.DefaultClient
+
+	httpRequest := handler.NewRestHttpRequest(apiEndpoint, httpClient)
 
 	res, err := httpRequest.GetRequestHandler(headers)
 	if err != nil {
