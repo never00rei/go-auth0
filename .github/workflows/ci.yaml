@@ -1,0 +1,51 @@
+name: CI Release Workflow
+on:
+  push:
+    branches:
+    - main
+  workflow_dispatch:  
+
+jobs:
+  changelog:
+    name: changelog
+    runs-on: ubuntu-latest
+    outputs:
+      tag: ${{ steps.changelog.outputs.tag }}
+      changelog: ${{ steps.changelog.outputs.clean_changelog }}
+      skip: ${{ steps.changelog.outputs.skipped == 'true' }}
+
+    steps:
+    - name: Clone application repository
+      uses: actions/checkout@v3
+      with:
+        fetch-depth: 0
+
+    - name: Generate Changelog 
+      id: changelog
+      uses: TriPSs/conventional-changelog-action@v3
+      with:
+        github-token: ${{ secrets.GITHUB_TOKEN }}
+        output-file: "false"       
+        version-file: ".github/deploy/Chart.yaml"
+        version-path: "appVersion" 
+        skip-commit: "true"   
+        skip-tag: "false"   
+        create-summary: "false"     
+
+  release:
+    needs: [changelog]
+    name: release
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Create Release
+      id: create_release
+      uses: actions/create-release@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        tag_name: ${{needs.changelog.outputs.tag}}
+        release_name: ${{needs.changelog.outputs.tag}}
+        body: ${{needs.changelog.outputs.changelog }}
+        draft: false
+        prerelease: false
