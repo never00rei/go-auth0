@@ -2,6 +2,7 @@ package config
 
 import (
 	"fmt"
+	"log"
 	"os"
 
 	"gopkg.in/ini.v1"
@@ -47,7 +48,10 @@ func CheckFileExists(fs FileSystem, filePath string) bool {
 }
 
 func CreateConfigFolder() {
-	os.MkdirAll(fmt.Sprintf("%s/%s", HomeDir, ConfigFolder), 0700)
+	err := os.MkdirAll(fmt.Sprintf("%s/%s", HomeDir, ConfigFolder), 0700)
+	if err != nil {
+		log.Print("Error creating directory")
+	}
 }
 
 func ReadCredentialsFile(filePath string, tenant string) (*ini.File, error) {
