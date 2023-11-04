@@ -2,7 +2,7 @@ package handler_test
 
 import (
 	"bytes"
-	"io/ioutil"
+	"io"
 	"net/http"
 	"testing"
 
@@ -26,7 +26,7 @@ func TestProcessResponse_Success(t *testing.T) {
 	jsonResponse := `{"key":"value"}`
 	mockResponse := http.Response{
 		StatusCode: http.StatusOK,
-		Body:       ioutil.NopCloser(bytes.NewBufferString(jsonResponse)),
+		Body:       io.NopCloser(bytes.NewBufferString(jsonResponse)),
 	}
 
 	mockModel := new(MockModel)

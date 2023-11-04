@@ -3,7 +3,7 @@ package handler_test
 import (
 	"bytes"
 	"fmt"
-	"io/ioutil"
+	"io"
 	"net/http"
 	"testing"
 
@@ -27,7 +27,7 @@ func TestGetRequestHandler_Success(t *testing.T) {
 	mockClient := new(MockHttpClient)
 	mockResponse := &http.Response{
 		StatusCode: http.StatusOK,
-		Body:       ioutil.NopCloser(bytes.NewBufferString(`OK`)),
+		Body:       io.NopCloser(bytes.NewBufferString(`OK`)),
 	}
 
 	mockClient.On("Do", mock.Anything).Return(mockResponse, nil)

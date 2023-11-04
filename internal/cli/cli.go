@@ -5,6 +5,7 @@ import (
 	"os"
 
 	"github.com/never00rei/go-auth0/internal/cli/command"
+	"github.com/never00rei/go-auth0/internal/cli/command/connections"
 	"github.com/never00rei/go-auth0/internal/cli/command/users"
 	"github.com/never00rei/go-auth0/internal/config"
 	"github.com/urfave/cli/v2"
@@ -50,6 +51,21 @@ func Execute() {
 					},
 				},
 				Action: users.GetAllUsers,
+			},
+			{
+				Name:     "get-connections",
+				Category: "Connection Details",
+				Usage:    "Fetches connection details from Auth0 Management API.",
+				Flags: []cli.Flag{
+					&cli.StringFlag{
+						Name:     "tenant",
+						Aliases:  []string{"t"},
+						Usage:    "Auth0 tenant",
+						Required: true,
+						EnvVars:  []string{config.EnvSessionTenant},
+					},
+				},
+				Action: connections.GetAllConnections,
 			},
 		},
 	}
