@@ -5,6 +5,7 @@ import (
 	"os"
 
 	"github.com/never00rei/go-auth0/internal/cli/command"
+	"github.com/never00rei/go-auth0/internal/cli/command/users"
 	"github.com/never00rei/go-auth0/internal/config"
 	"github.com/urfave/cli/v2"
 )
@@ -15,13 +16,15 @@ func Execute() {
 		Usage: "A CLI tool for Auth0",
 		Commands: []*cli.Command{
 			{
-				Name:   "configure",
-				Usage:  "Configure the CLI tool",
-				Action: command.Configure,
+				Name:     "configure",
+				Usage:    "Configure the CLI tool",
+				Category: "Setup",
+				Action:   command.Configure,
 			},
 			{
-				Name:  "login",
-				Usage: "Login to Auth0",
+				Name:     "login",
+				Usage:    "Login to Auth0",
+				Category: "Setup",
 				Flags: []cli.Flag{
 					&cli.StringFlag{
 						Name:     "tenant",
@@ -32,6 +35,21 @@ func Execute() {
 					},
 				},
 				Action: command.Login,
+			},
+			{
+				Name:     "get-users",
+				Category: "User Details",
+				Usage:    "Fetches user details from Auth0 Management API.",
+				Flags: []cli.Flag{
+					&cli.StringFlag{
+						Name:     "tenant",
+						Aliases:  []string{"t"},
+						Usage:    "Auth0 tenant",
+						Required: true,
+						EnvVars:  []string{config.EnvSessionTenant},
+					},
+				},
+				Action: users.GetAllUsers,
 			},
 		},
 	}

@@ -6,7 +6,6 @@ import (
 	"os"
 	"os/exec"
 
-	//"github.com/never00rei/go-auth0/internal/auth"
 	"github.com/never00rei/go-auth0/internal/auth"
 	"github.com/never00rei/go-auth0/internal/config"
 )
@@ -16,12 +15,6 @@ type ShellEnvironment struct{}
 func (s ShellEnvironment) GetDefaultShell() string {
 	shell := os.Getenv("SHELL")
 	return shell
-}
-
-// Not implemented yet...:
-func (s ShellEnvironment) GetEnvironmentVars() error {
-
-	return nil
 }
 
 func (s ShellEnvironment) NewSubShell(a auth.Auth0AuthToken) error {
@@ -37,13 +30,15 @@ func (s ShellEnvironment) NewSubShell(a auth.Auth0AuthToken) error {
 
 	env := os.Environ()
 
-	tokenEnvVar := fmt.Sprintf("%s=%s", config.EnvSessionBearerToken, a.Token.OauthToken)
+	tokenEnvVar := fmt.Sprintf("%s=%s", config.EnvSessionBearerToken, a.Token.ConstructBearerToken())
 	expiryEnvVar := fmt.Sprintf("%s=%s", config.EnvSessionTokenExpiryTime, a.ExpiresDate.String())
 	tenantEnvVar := fmt.Sprintf("%s=%s", config.EnvSessionTenant, a.ClientAuth.Tenant)
+	apiUrlEnvVar := fmt.Sprintf("%s=%s", config.EnvSessionApiUrl, config.Auth0ApiBaseUrl(a.ClientAuth.ApiDomain))
 
 	env = append(env, tokenEnvVar)
 	env = append(env, expiryEnvVar)
 	env = append(env, tenantEnvVar)
+	env = append(env, apiUrlEnvVar)
 
 	cmd.Env = env
 
@@ -57,4 +52,9 @@ func (s ShellEnvironment) NewSubShell(a auth.Auth0AuthToken) error {
 
 	return nil
 
+}
+
+func CheckEnvVarExists(envVar string) bool {
+	_, exists := os.LookupEnv(envVar)
+	return exists
 }
