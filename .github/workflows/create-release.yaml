@@ -1,4 +1,4 @@
-name: CI Release Workflow
+name: CI - Release Workflow
 on:
   push:
     branches:
